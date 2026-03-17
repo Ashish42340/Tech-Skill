@@ -1,0 +1,468 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Tech Skills Checker{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-md-10">
+            <h1 class="display-5 fw-bold mb-2">
+                <i class="fas fa-home text-primary"></i> Dashboard
+            </h1>
+            <p class="lead text-muted">
+                Welcome back, <span class="text-primary fw-bold">{{ current_user.username }}</span>! 👋
+            </p>
+        </div>
+        <div class="col-md-2 text-end">
+            <div style="position: relative; display: inline-block;">
+                <i class="fas fa-bell fa-2x text-primary" style="cursor: pointer;"></i>
+                <span style="position: absolute; top: -8px; right: -8px; background: #dc3545; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold;">3</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-trophy fa-3x text-primary mb-3"></i>
+                    <h3 class="fw-bold mb-1">{{ user_skills_count }}</h3>
+                    <p class="text-muted mb-0">Total Skills</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                    <h3 class="fw-bold mb-1">{{ recent_analyses|length }}</h3>
+                    <p class="text-muted mb-0">Analyses Done</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-fire fa-3x text-danger mb-3"></i>
+                    <h3 class="fw-bold mb-1">7</h3>
+                    <p class="text-muted mb-0">Day Streak</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                    <h3 class="fw-bold mb-1">{{ job_recommendations|length }}</h3>
+                    <p class="text-muted mb-0">Job Matches</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">
+                <i class="fas fa-bolt text-warning"></i> Quick Actions
+            </h5>
+            <div class="row g-2">
+                <div class="col-md-3 col-sm-6">
+                    <a href="{{ url_for('main.skills') }}" class="btn btn-primary w-100 py-3">
+                        <i class="fas fa-plus-circle"></i><br>Add Skills
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <a href="{{ url_for('main.analyze') }}" class="btn btn-success w-100 py-3">
+                        <i class="fas fa-search"></i><br>Analyze Job
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <a href="{{ url_for('main.recommendations') }}" class="btn btn-warning w-100 py-3">
+                        <i class="fas fa-star"></i><br>Recommendations
+                    </a>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <a href="{{ url_for('main.profile') }}" class="btn btn-info w-100 py-3">
+                        <i class="fas fa-user"></i><br>My Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weekly Activity Chart -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-calendar-week text-primary"></i> Weekly Activity
+                    </h5>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; height: 150px;">
+                        <div style="flex: 1; text-align: center;">
+                            <div style="height: 60%; background: linear-gradient(to top, #667eea, #764ba2); border-radius: 10px 10px 0 0; margin: 0 5px;"></div>
+                            <small class="text-muted mt-2 d-block">Mon</small>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div style="height: 80%; background: linear-gradient(to top, #667eea, #764ba2); border-radius: 10px 10px 0 0; margin: 0 5px;"></div>
+                            <small class="text-muted mt-2 d-block">Tue</small>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div style="height: 45%; background: linear-gradient(to top, #667eea, #764ba2); border-radius: 10px 10px 0 0; margin: 0 5px;"></div>
+                            <small class="text-muted mt-2 d-block">Wed</small>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div style="height: 100%; background: linear-gradient(to top, #667eea, #764ba2); border-radius: 10px 10px 0 0; margin: 0 5px;"></div>
+                            <small class="text-muted mt-2 d-block">Thu</small>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div style="height: 70%; background: linear-gradient(to top, #667eea, #764ba2); border-radius: 10px 10px 0 0; margin: 0 5px;"></div>
+                            <small class="text-muted mt-2 d-block">Fri</small>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div style="height: 30%; background: linear-gradient(to top, #667eea, #764ba2); border-radius: 10px 10px 0 0; margin: 0 5px;"></div>
+                            <small class="text-muted mt-2 d-block">Sat</small>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div style="height: 50%; background: linear-gradient(to top, #667eea, #764ba2); border-radius: 10px 10px 0 0; margin: 0 5px;"></div>
+                            <small class="text-muted mt-2 d-block">Sun</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills by Category -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="fas fa-layer-group text-primary"></i> Skills by Category
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card text-white text-center p-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); cursor: pointer;" onclick="window.location.href='{{ url_for('main.skills') }}'">
+                                <i class="fas fa-code fa-3x mb-2"></i>
+                                <h3 class="mb-1">{{ user_skills_count }}</h3>
+                                <small>Programming</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card text-white text-center p-4" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                                <i class="fas fa-database fa-3x mb-2"></i>
+                                <h3 class="mb-1">0</h3>
+                                <small>Database</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card text-white text-center p-4" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                <i class="fas fa-paint-brush fa-3x mb-2"></i>
+                                <h3 class="mb-1">0</h3>
+                                <small>Design</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card text-white text-center p-4" style="background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);">
+                                <i class="fas fa-server fa-3x mb-2"></i>
+                                <h3 class="mb-1">0</h3>
+                                <small>DevOps</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learning Roadmap & Activity -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-route text-success"></i> Your Learning Roadmap
+                    </h5>
+                    
+                    <div class="mb-3 p-3 border rounded" style="background: #f8f9fa;">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: bold;">1</div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">Add Your Skills</h6>
+                                <small class="text-muted">Build your skill portfolio</small>
+                            </div>
+                            <span class="badge bg-success">Complete</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 p-3 border rounded">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: bold;">2</div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">Analyze Dream Jobs</h6>
+                                <small class="text-muted">Find skill gaps</small>
+                            </div>
+                            <span class="badge bg-warning text-dark">In Progress</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 p-3 border rounded">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: bold;">3</div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">Learn Missing Skills</h6>
+                                <small class="text-muted">Bridge the gap</small>
+                            </div>
+                            <span class="badge bg-secondary">Pending</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3 border rounded">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: bold;">4</div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">Apply for Jobs</h6>
+                                <small class="text-muted">Land your dream role</small>
+                            </div>
+                            <span class="badge bg-secondary">Pending</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-clock text-info"></i> Recent Activity
+                    </h5>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex">
+                            <div class="bg-primary text-white rounded-circle me-3" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Account Created</h6>
+                                <p class="text-muted mb-0 small">Welcome to Tech Skills Checker!</p>
+                                <small class="text-muted">Today, {{ current_user.created_at.strftime('%I:%M %p') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if recent_analyses %}
+                    <div class="mb-3">
+                        <div class="d-flex">
+                            <div class="bg-success text-white rounded-circle me-3" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Job Analyzed</h6>
+                                <p class="text-muted mb-0 small">{{ recent_analyses[0].job_title }}</p>
+                                <small class="text-muted">{{ recent_analyses[0].created_at.strftime('%d %b, %I:%M %p') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <div class="d-flex">
+                            <div class="bg-warning text-white rounded-circle me-3" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">Tip of the Day</h6>
+                                <p class="text-muted mb-0 small">Add at least 10 skills for better job matches!</p>
+                                <small class="text-muted">Today</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommended Skills -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-graduation-cap text-danger"></i> Recommended Skills to Learn
+                    </h5>
+                    
+                    <div class="mb-3 p-3 border-start border-danger border-4 bg-light">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h6 class="mb-1"><i class="fab fa-js text-warning"></i> JavaScript</h6>
+                                <p class="text-muted mb-0 small">Required in 85% of web developer jobs</p>
+                            </div>
+                            <span class="badge bg-danger">High Priority</span>
+                        </div>
+                        <button class="btn btn-sm btn-primary me-2">
+                            <i class="fas fa-plus"></i> Add to Skills
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-book"></i> Learn More
+                        </button>
+                    </div>
+                    
+                    <div class="mb-3 p-3 border-start border-warning border-4 bg-light">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h6 class="mb-1"><i class="fab fa-react text-info"></i> React</h6>
+                                <p class="text-muted mb-0 small">Popular frontend framework - 70% demand</p>
+                            </div>
+                            <span class="badge bg-warning text-dark">Medium Priority</span>
+                        </div>
+                        <button class="btn btn-sm btn-primary me-2">
+                            <i class="fas fa-plus"></i> Add to Skills
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-book"></i> Learn More
+                        </button>
+                    </div>
+                    
+                    <div class="p-3 border-start border-success border-4 bg-light">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h6 class="mb-1"><i class="fas fa-database text-success"></i> SQL</h6>
+                                <p class="text-muted mb-0 small">Essential for data handling - 60% demand</p>
+                            </div>
+                            <span class="badge bg-success">Low Priority</span>
+                        </div>
+                        <button class="btn btn-sm btn-primary me-2">
+                            <i class="fas fa-plus"></i> Add to Skills
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-book"></i> Learn More
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Skills & Analyses -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-code"></i> My Skills</h5>
+                </div>
+                <div class="card-body">
+                    {% if user_skills %}
+                        {% for skill, proficiency in user_skills[:5] %}
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="fw-bold">{{ skill.name }}</span>
+                                    <span class="badge bg-primary">{{ proficiency }}</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar" style="width: {{ 25 if proficiency == 'Beginner' else 50 if proficiency == 'Intermediate' else 75 if proficiency == 'Advanced' else 100 }}%"></div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('main.skills') }}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Manage Skills
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                            <h5 class="text-muted">No skills yet!</h5>
+                            <a href="{{ url_for('main.skills') }}" class="btn btn-primary mt-3">
+                                <i class="fas fa-plus"></i> Add Skills
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-history"></i> Recent Analyses</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_analyses %}
+                        {% for analysis in recent_analyses %}
+                            <div class="mb-3 p-3 bg-light rounded">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0">{{ analysis.job_title }}</h6>
+                                    <small class="text-muted">{{ analysis.created_at.strftime('%d %b') }}</small>
+                                </div>
+                                <div class="progress" style="height: 25px;">
+                                    <div class="progress-bar bg-{{ 'success' if analysis.match_percentage >= 70 else 'warning' if analysis.match_percentage >= 40 else 'danger' }}" 
+                                         style="width: {{ analysis.match_percentage }}%">
+                                        {{ analysis.match_percentage|round(1) }}%
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                            <h5 class="text-muted">No analyses yet!</h5>
+                            <a href="{{ url_for('main.analyze') }}" class="btn btn-success mt-3">
+                                <i class="fas fa-search"></i> Analyze Job
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Recommendations -->
+    {% if job_recommendations %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-star"></i> Top Job Recommendations</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for rec in job_recommendations[:3] %}
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h6 class="mb-2">{{ rec.job_title }}</h6>
+                                        <div class="text-center my-3">
+                                            <h2 class="text-{{ 'success' if rec.match_percentage >= 70 else 'warning' if rec.match_percentage >= 40 else 'danger' }}">
+                                                {{ rec.match_percentage|round(1) }}%
+                                            </h2>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            {{ rec.missing_skills.split(',') | length }} skills to learn
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('main.recommendations') }}" class="btn btn-warning">
+                            View All Recommendations
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

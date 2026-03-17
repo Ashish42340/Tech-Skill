@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Tech Skills Checker{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">
+    <i class="fas fa-user-circle"></i> My Profile
+</h1>
+
+<div class="row">
+    <!-- User Info -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="profile-avatar mb-3">
+                    <i class="fas fa-user-circle fa-5x text-primary"></i>
+                </div>
+                <h3>{{ current_user.username }}</h3>
+                <p class="text-muted">{{ current_user.email }}</p>
+                <hr>
+                <p class="mb-1">
+                    <i class="fas fa-calendar"></i> Member since
+                </p>
+                <p class="text-muted">{{ current_user.created_at.strftime('%B %Y') }}</p>
+                
+                {% if current_user.last_login %}
+                    <p class="mb-1">
+                        <i class="fas fa-clock"></i> Last login
+                    </p>
+                    <p class="text-muted">{{ current_user.last_login.strftime('%d %b %Y, %I:%M %p') }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 col-md-3 mb-4">
+                        <div class="stat-box">
+                            <div class="stat-number text-primary">{{ total_skills }}</div>
+                            <div class="stat-label">Total Skills</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-4">
+                        <div class="stat-box">
+                            <div class="stat-number text-success">{{ total_analyses }}</div>
+                            <div class="stat-label">Analyses Done</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-4">
+                        <div class="stat-box">
+                            <div class="stat-number text-warning">{{ avg_match }}%</div>
+                            <div class="stat-label">Avg Match</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-4">
+                        <div class="stat-box">
+                            <div class="stat-number text-info">{{ beginner + intermediate + advanced + expert }}</div>
+                            <div class="stat-label">Skills Added</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills by Proficiency -->
+        <div class="card mt-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-layer-group"></i> Skills by Proficiency</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6 col-md-3 text-center mb-3">
+                        <div class="proficiency-box">
+                            <div class="proficiency-icon">
+                                <i class="fas fa-seedling fa-2x text-secondary"></i>
+                            </div>
+                            <h4 class="mt-2">{{ beginner }}</h4>
+                            <small class="text-muted">Beginner</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 text-center mb-3">
+                        <div class="proficiency-box">
+                            <div class="proficiency-icon">
+                                <i class="fas fa-spa fa-2x text-info"></i>
+                            </div>
+                            <h4 class="mt-2">{{ intermediate }}</h4>
+                            <small class="text-muted">Intermediate</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 text-center mb-3">
+                        <div class="proficiency-box">
+                            <div class="proficiency-icon">
+                                <i class="fas fa-tree fa-2x text-primary"></i>
+                            </div>
+                            <h4 class="mt-2">{{ advanced }}</h4>
+                            <small class="text-muted">Advanced</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 text-center mb-3">
+                        <div class="proficiency-box">
+                            <div class="proficiency-icon">
+                                <i class="fas fa-crown fa-2x text-warning"></i>
+                            </div>
+                            <h4 class="mt-2">{{ expert }}</h4>
+                            <small class="text-muted">Expert</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bars -->
+                <div class="mt-4">
+                    <h6>Skill Distribution</h6>
+                    {% set total = beginner + intermediate + advanced + expert %}
+                    {% if total > 0 %}
+                        <div class="progress mb-2" style="height: 30px;">
+                            {% if beginner > 0 %}
+                                <div class="progress-bar bg-secondary" style="width: {{ (beginner/total*100)|round }}%">
+                                    Beginner ({{ beginner }})
+                                </div>
+                            {% endif %}
+                            {% if intermediate > 0 %}
+                                <div class="progress-bar bg-info" style="width: {{ (intermediate/total*100)|round }}%">
+                                    Intermediate ({{ intermediate }})
+                                </div>
+                            {% endif %}
+                            {% if advanced > 0 %}
+                                <div class="progress-bar bg-primary" style="width: {{ (advanced/total*100)|round }}%">
+                                    Advanced ({{ advanced }})
+                                </div>
+                            {% endif %}
+                            {% if expert > 0 %}
+                                <div class="progress-bar bg-warning" style="width: {{ (expert/total*100)|round }}%">
+                                    Expert ({{ expert }})
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No skills added yet</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.stat-box {
+    padding: 20px;
+    border-radius: 10px;
+    background: #f8f9fa;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.stat-label {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.proficiency-box {
+    padding: 15px;
+}
+
+.profile-avatar {
+    padding: 20px 0;
+}
+</style>
+{% endblock %}

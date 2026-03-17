@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Tech Skills Checker{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section text-center py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="display-4 fw-bold mb-4">
+                <i class="fas fa-rocket text-primary"></i> Tech Skills Checker
+            </h1>
+            <p class="lead mb-4">
+                Apne tech skills ko analyze karo aur perfect job ke liye ready ho jao! 🚀
+            </p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg px-4 gap-3">
+                    <i class="fas fa-user-plus"></i> Get Started
+                </a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-lg px-4">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">✨ Features</h2>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-search fa-3x text-primary"></i>
+                </div>
+                <h5 class="card-title">Job Analysis</h5>
+                <p class="card-text">
+                    Kisi bhi job title ke liye required skills check karo. Indeed aur Naukri.com se real data!
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-chart-line fa-3x text-success"></i>
+                </div>
+                <h5 class="card-title">Skills Tracking</h5>
+                <p class="card-text">
+                    Apne skills ko track karo aur proficiency level set karo. Beginner se Expert tak!
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-star fa-3x text-warning"></i>
+                </div>
+                <h5 class="card-title">Job Recommendations</h5>
+                <p class="card-text">
+                    Apne skills ke basis par best job recommendations pao. Match percentage dekho!
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">🎯 How It Works</h2>
+    </div>
+    
+    <div class="col-lg-8 mx-auto">
+        <div class="list-group">
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><span class="badge bg-primary">1</span> Register/Login</h5>
+                </div>
+                <p class="mb-1">Pehle account banaao ya login karo</p>
+            </div>
+            
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><span class="badge bg-primary">2</span> Add Your Skills</h5>
+                </div>
+                <p class="mb-1">Apne current tech skills add karo aur proficiency set karo</p>
+            </div>
+            
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><span class="badge bg-primary">3</span> Analyze Jobs</h5>
+                </div>
+                <p class="mb-1">Job title enter karo aur required skills dekho</p>
+            </div>
+            
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><span class="badge bg-primary">4</span> Get Recommendations</h5>
+                </div>
+                <p class="mb-1">Match percentage dekho aur missing skills ko learn karo!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="row mt-5">
+    <div class="col-lg-8 mx-auto text-center">
+        <div class="card bg-primary text-white">
+            <div class="card-body py-5">
+                <h3 class="mb-3">Ready to Find Your Perfect Tech Job? 💼</h3>
+                <p class="lead mb-4">Join karo aur apne dream job ke liye prepare ho jao!</p>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-rocket"></i> Start Now - It's Free!
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    margin: 20px 0;
+}
+
+.hero-section .btn {
+    font-weight: bold;
+}
+
+.feature-icon {
+    padding: 20px;
+}
+
+.card {
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+</style>
+{% endblock %}

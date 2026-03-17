@@ -1,0 +1,521 @@
+{% extends "base.html" %}
+
+{% block title %}My Skills - Tech Skills Checker{% endblock %}
+
+{% block content %}
+<div class="skills-container">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-5 fw-bold mb-2">
+                <i class="fas fa-code text-primary"></i> My Skills Portfolio
+            </h1>
+            <p class="lead text-muted">Manage your tech skills and track your proficiency levels</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="skill-stats p-3 bg-primary text-white rounded">
+                <h3 class="mb-0" id="totalSkillsCount">{{ user_skills|length if user_skills else 0 }}</h3>
+                <small>Skills Added</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Bar -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control form-control-lg" id="searchSkills" placeholder="Search skills... (e.g., Python, React)">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select form-select-lg" id="filterCategory">
+                        <option value="">All Categories</option>
+                        <option value="Programming Languages">Programming Languages</option>
+                        <option value="Frameworks">Frameworks</option>
+                        <option value="Databases">Databases</option>
+                        <option value="Cloud">Cloud</option>
+                        <option value="Tools">Tools</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Mobile">Mobile</option>
+                        <option value="Methodology">Methodology</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select form-select-lg" id="filterStatus">
+                        <option value="">All Skills</option>
+                        <option value="added">Added Skills</option>
+                        <option value="notadded">Available Skills</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Counter -->
+    <div class="alert alert-info mb-3" id="resultsCounter" style="display: none;">
+        <i class="fas fa-info-circle"></i> Showing <strong id="visibleCount">0</strong> of <strong id="totalCount">0</strong> skills
+    </div>
+
+    <!-- Proficiency Legend -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h6 class="mb-3"><i class="fas fa-info-circle text-info"></i> Proficiency Levels</h6>
+            <div class="row g-2">
+                <div class="col-md-3 col-sm-6">
+                    <div class="proficiency-legend">
+                        <span class="badge bg-secondary me-2">Beginner</span>
+                        <small class="text-muted">Just starting out</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="proficiency-legend">
+                        <span class="badge bg-info me-2">Intermediate</span>
+                        <small class="text-muted">Working knowledge</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="proficiency-legend">
+                        <span class="badge bg-primary me-2">Advanced</span>
+                        <small class="text-muted">Strong expertise</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="proficiency-legend">
+                        <span class="badge bg-success me-2">Expert</span>
+                        <small class="text-muted">Master level</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills Grid by Category -->
+    {% for category, skills in skills_by_category.items() %}
+    <div class="category-section mb-4" data-category="{{ category }}">
+        <div class="card">
+            <div class="card-header category-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-folder-open"></i> {{ category }}
+                    </h5>
+                    <span class="badge bg-white text-primary category-count">
+                        {{ skills|selectattr('has_skill')|list|length }} / {{ skills|length }} added
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 skills-grid">
+                    {% for item in skills %}
+                        <div class="col-lg-3 col-md-4 col-sm-6 skill-card-wrapper" 
+                             data-skill-name="{{ item.skill.name|lower }}" 
+                             data-skill-category="{{ item.skill.category }}"
+                             data-skill-status="{{ 'added' if item.has_skill else 'notadded' }}">
+                            <div class="skill-card {{ 'skill-added' if item.has_skill else 'skill-available' }}" 
+                                 data-skill-id="{{ item.skill.id }}">
+                                <div class="skill-card-header">
+                                    <div class="skill-icon">
+                                        {% if 'Python' in item.skill.name %}
+                                            <i class="fab fa-python text-primary"></i>
+                                        {% elif 'JavaScript' in item.skill.name %}
+                                            <i class="fab fa-js text-warning"></i>
+                                        {% elif 'Java' in item.skill.name %}
+                                            <i class="fab fa-java text-danger"></i>
+                                        {% elif 'React' in item.skill.name %}
+                                            <i class="fab fa-react text-info"></i>
+                                        {% elif 'Node' in item.skill.name %}
+                                            <i class="fab fa-node text-success"></i>
+                                        {% elif 'Docker' in item.skill.name %}
+                                            <i class="fab fa-docker text-primary"></i>
+                                        {% elif 'Git' in item.skill.name %}
+                                            <i class="fab fa-git-alt text-danger"></i>
+                                        {% elif 'AWS' in item.skill.name %}
+                                            <i class="fab fa-aws text-warning"></i>
+                                        {% else %}
+                                            <i class="fas fa-code"></i>
+                                        {% endif %}
+                                    </div>
+                                    <h6 class="skill-name mb-1">{{ item.skill.name }}</h6>
+                                    <small class="text-muted">{{ item.skill.category }}</small>
+                                </div>
+
+                                {% if item.has_skill %}
+                                    <div class="skill-card-body">
+                                        <div class="mb-2">
+                                            <label class="form-label small mb-1">Proficiency Level</label>
+                                            <select class="form-select form-select-sm proficiency-selector" 
+                                                    data-skill-id="{{ item.skill.id }}">
+                                                <option value="Beginner">Beginner</option>
+                                                <option value="Intermediate">Intermediate</option>
+                                                <option value="Advanced">Advanced</option>
+                                                <option value="Expert">Expert</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="skill-progress mb-2">
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-success" style="width: 100%"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <button class="btn btn-danger btn-sm w-100 remove-skill-btn" 
+                                                data-skill-id="{{ item.skill.id }}"
+                                                data-skill-name="{{ item.skill.name }}">
+                                            <i class="fas fa-times"></i> Remove
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    <div class="skill-card-body">
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-info-circle"></i> Add this skill to your portfolio
+                                        </p>
+                                        <button class="btn btn-primary btn-sm w-100 add-skill-btn" 
+                                                data-skill-id="{{ item.skill.id }}"
+                                                data-skill-name="{{ item.skill.name }}">
+                                            <i class="fas fa-plus"></i> Add Skill
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- No Results Message -->
+    <div class="card text-center py-5" id="noResults" style="display: none;">
+        <div class="card-body">
+            <i class="fas fa-search fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">No Skills Found</h4>
+            <p class="text-muted">Try adjusting your search or filters</p>
+            <button class="btn btn-primary" id="clearFilters">
+                <i class="fas fa-times"></i> Clear All Filters
+            </button>
+        </div>
+    </div>
+
+    <!-- Quick Add Custom Skill -->
+    <div class="card mb-4">
+        <div class="card-body text-center">
+            <i class="fas fa-plus-circle fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Don't see your skill?</h5>
+            <p class="text-muted">We're constantly adding new skills. Check back soon!</p>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Skills Container */
+.skills-container {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Skill Stats Box */
+.skill-stats {
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Category Header */
+.category-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+/* Skill Card */
+.skill-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+.skill-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.skill-card.skill-added {
+    border-color: #28a745;
+    background: linear-gradient(135deg, #f0fff4 0%, #ffffff 100%);
+}
+
+.skill-card-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.skill-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.skill-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.skill-card-body {
+    margin-top: auto;
+}
+
+.proficiency-selector {
+    border: 2px solid #667eea;
+    font-weight: 600;
+}
+
+/* Buttons */
+.add-skill-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    font-weight: 600;
+}
+
+/* Proficiency Legend */
+.proficiency-legend {
+    padding: 10px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+}
+
+/* Search Input */
+.input-group-text {
+    background: #667eea;
+    color: white;
+    border: none;
+}
+
+.form-control-lg, .form-select-lg {
+    border: 2px solid #667eea;
+}
+
+/* Hidden Elements */
+.skill-card-wrapper.hidden {
+    display: none !important;
+}
+
+.category-section.hidden {
+    display: none !important;
+}
+</style>
+
+<script>
+// Wait for DOM to load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Skills page loaded!');
+    
+    // Get all elements
+    const searchInput = document.getElementById('searchSkills');
+    const categoryFilter = document.getElementById('filterCategory');
+    const statusFilter = document.getElementById('filterStatus');
+    const resultsCounter = document.getElementById('resultsCounter');
+    const visibleCount = document.getElementById('visibleCount');
+    const totalCount = document.getElementById('totalCount');
+    const noResults = document.getElementById('noResults');
+    const clearFiltersBtn = document.getElementById('clearFilters');
+    
+    // Get all skill cards
+    const allSkillCards = document.querySelectorAll('.skill-card-wrapper');
+    const totalSkills = allSkillCards.length;
+    
+    console.log(`Total skills found: ${totalSkills}`);
+    
+    // Set total count
+    if (totalCount) {
+        totalCount.textContent = totalSkills;
+    }
+    
+    // Filter function
+    function filterSkills() {
+        console.log('Filtering skills...');
+        
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const categoryValue = categoryFilter.value;
+        const statusValue = statusFilter.value;
+        
+        console.log('Search:', searchTerm);
+        console.log('Category:', categoryValue);
+        console.log('Status:', statusValue);
+        
+        let visibleSkills = 0;
+        
+        // Filter each skill card
+        allSkillCards.forEach(card => {
+            const skillName = card.getAttribute('data-skill-name');
+            const skillCategory = card.getAttribute('data-skill-category');
+            const skillStatus = card.getAttribute('data-skill-status');
+            
+            let show = true;
+            
+            // Search filter
+            if (searchTerm && !skillName.includes(searchTerm)) {
+                show = false;
+            }
+            
+            // Category filter
+            if (categoryValue && skillCategory !== categoryValue) {
+                show = false;
+            }
+            
+            // Status filter
+            if (statusValue && skillStatus !== statusValue) {
+                show = false;
+            }
+            
+            // Show or hide card
+            if (show) {
+                card.classList.remove('hidden');
+                visibleSkills++;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+        
+        console.log(`Visible skills: ${visibleSkills}`);
+        
+        // Update visible count
+        if (visibleCount) {
+            visibleCount.textContent = visibleSkills;
+        }
+        
+        // Show/hide results counter
+        if (resultsCounter) {
+            resultsCounter.style.display = (searchTerm || categoryValue || statusValue) ? 'block' : 'none';
+        }
+        
+        // Show/hide no results message
+        if (noResults) {
+            noResults.style.display = (visibleSkills === 0) ? 'block' : 'none';
+        }
+        
+        // Show/hide empty categories
+        document.querySelectorAll('.category-section').forEach(section => {
+            const visibleInCategory = section.querySelectorAll('.skill-card-wrapper:not(.hidden)').length;
+            if (visibleInCategory > 0) {
+                section.classList.remove('hidden');
+            } else {
+                section.classList.add('hidden');
+            }
+        });
+    }
+    
+    // Add event listeners
+    if (searchInput) {
+        searchInput.addEventListener('input', filterSkills);
+        console.log('✅ Search listener added');
+    }
+    
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', filterSkills);
+        console.log('✅ Category filter listener added');
+    }
+    
+    if (statusFilter) {
+        statusFilter.addEventListener('change', filterSkills);
+        console.log('✅ Status filter listener added');
+    }
+    
+    // Clear filters button
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            categoryFilter.value = '';
+            statusFilter.value = '';
+            filterSkills();
+        });
+    }
+    
+    // Add/Remove skill functionality (using jQuery from base template)
+    $(document).on('click', '.add-skill-btn', function() {
+        const btn = $(this);
+        const skillId = btn.data('skill-id');
+        const skillName = btn.data('skill-name');
+        
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Adding...');
+        
+        $.ajax({
+            url: '/api/add-skill',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                skill_id: skillId,
+                proficiency: 'Beginner'
+            }),
+            success: function() {
+                alert(skillName + ' added successfully!');
+                location.reload();
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON?.message || 'Error adding skill');
+                btn.prop('disabled', false).html('<i class="fas fa-plus"></i> Add Skill');
+            }
+        });
+    });
+    
+    $(document).on('click', '.remove-skill-btn', function() {
+        const btn = $(this);
+        const skillId = btn.data('skill-id');
+        const skillName = btn.data('skill-name');
+        
+        if (!confirm('Remove ' + skillName + '?')) return;
+        
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+        
+        $.ajax({
+            url: '/api/remove-skill',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({skill_id: skillId}),
+            success: function() {
+                alert(skillName + ' removed!');
+                location.reload();
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON?.message || 'Error');
+                btn.prop('disabled', false).html('<i class="fas fa-times"></i> Remove');
+            }
+        });
+    });
+    
+    $(document).on('change', '.proficiency-selector', function() {
+        const select = $(this);
+        const skillId = select.data('skill-id');
+        const proficiency = select.val();
+        
+        $.ajax({
+            url: '/api/update-proficiency',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                skill_id: skillId,
+                proficiency: proficiency
+            }),
+            success: function() {
+                alert('Proficiency updated to ' + proficiency);
+            },
+            error: function() {
+                alert('Error updating proficiency');
+            }
+        });
+    });
+    
+    console.log('✅ All event listeners set up!');
+});
+</script>
+{% endblock %}

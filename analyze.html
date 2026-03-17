@@ -1,0 +1,574 @@
+{% extends "base.html" %}
+
+{% block title %}Analyze Job - Tech Skills Checker{% endblock %}
+
+{% block content %}
+<div class="analyze-container">
+    <!-- Hero Section -->
+    <div class="analyze-hero mb-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold text-white mb-3">
+                    <i class="fas fa-search-plus"></i> Analyze Your Dream Job
+                </h1>
+                <p class="lead text-white mb-4">
+                    Enter any job title and discover exactly what skills you need to land that role! 🎯
+                </p>
+                <div class="stats-badges">
+                    <span class="badge bg-white text-primary me-2 mb-2">
+                        <i class="fas fa-briefcase"></i> 1000+ Jobs Analyzed
+                    </span>
+                    <span class="badge bg-white text-primary me-2 mb-2">
+                        <i class="fas fa-globe"></i> Indeed & Naukri.com
+                    </span>
+                    <span class="badge bg-white text-primary mb-2">
+                        <i class="fas fa-clock"></i> Real-time Data
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="hero-illustration">
+                    <i class="fas fa-chart-line fa-10x text-white opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Analysis Form -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 analysis-card">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="analysis-icon mb-3">
+                            <i class="fas fa-briefcase fa-4x text-primary"></i>
+                        </div>
+                        <h2 class="fw-bold">Start Your Analysis</h2>
+                        <p class="text-muted">Enter the job title you're interested in</p>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('main.analyze') }}" id="analyzeForm">
+                        <div class="mb-4">
+                            <label for="job_title" class="form-label fs-5 fw-bold">
+                                <i class="fas fa-keyboard"></i> Job Title
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg" 
+                                   id="job_title" 
+                                   name="job_title" 
+                                   placeholder="e.g., Python Developer, Data Scientist, Full Stack Engineer"
+                                   required 
+                                   autofocus
+                                   autocomplete="off">
+                            <div class="form-text">
+                                <i class="fas fa-lightbulb text-warning"></i> 
+                                <strong>Tip:</strong> Be specific for better results (e.g., "Senior React Developer" vs "Developer")
+                            </div>
+                        </div>
+
+                        <!-- Job Location (Optional) -->
+                        <div class="mb-4">
+                            <label for="job_location" class="form-label fw-bold">
+                                <i class="fas fa-map-marker-alt"></i> Location (Optional)
+                            </label>
+                            <select class="form-select form-select-lg" id="job_location" name="job_location">
+                                <option value="India">India</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Hyderabad">Hyderabad</option>
+                                <option value="Pune">Pune</option>
+                                <option value="Remote">Remote</option>
+                            </select>
+                        </div>
+
+                        <!-- Analysis Options -->
+                        <div class="card bg-light mb-4">
+                            <div class="card-body">
+                                <h6 class="fw-bold mb-3">
+                                    <i class="fas fa-sliders-h"></i> Analysis Options
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="deepAnalysis" checked>
+                                            <label class="form-check-label" for="deepAnalysis">
+                                                <i class="fas fa-microscope text-primary"></i> Deep Analysis
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="salaryInfo" checked>
+                                            <label class="form-check-label" for="salaryInfo">
+                                                <i class="fas fa-dollar-sign text-success"></i> Salary Insights
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="trendAnalysis" checked>
+                                            <label class="form-check-label" for="trendAnalysis">
+                                                <i class="fas fa-chart-line text-info"></i> Trend Analysis
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="recommendations" checked>
+                                            <label class="form-check-label" for="recommendations">
+                                                <i class="fas fa-star text-warning"></i> Get Recommendations
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- How It Works -->
+                        <div class="alert alert-info mb-4">
+                            <h6 class="fw-bold mb-2">
+                                <i class="fas fa-info-circle"></i> How It Works
+                            </h6>
+                            <ul class="mb-0 small">
+                                <li>We scrape <strong>Indeed</strong> and <strong>Naukri.com</strong> for real job postings</li>
+                                <li>Extract and analyze required skills from job descriptions</li>
+                                <li>Compare with your current skill portfolio</li>
+                                <li>Generate detailed match report with recommendations</li>
+                            </ul>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg analyze-btn" id="analyzeBtn">
+                                <i class="fas fa-search"></i> Analyze Job Requirements
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Loading State -->
+                    <div id="loadingState" class="text-center mt-4" style="display: none;">
+                        <div class="loading-animation mb-3">
+                            <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <h5 class="text-primary mb-2">
+                            <i class="fas fa-robot"></i> AI is analyzing job market...
+                        </h5>
+                        <p class="text-muted mb-3">This may take 10-15 seconds ⏳</p>
+                        <div class="progress mb-2" style="height: 8px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 role="progressbar" 
+                                 style="width: 0%" 
+                                 id="progressBar"></div>
+                        </div>
+                        <small class="text-muted" id="progressText">Initializing...</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popular Job Searches -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-fire text-danger"></i> Trending Job Searches
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <button class="quick-search-btn" data-job="Python Developer">
+                                <i class="fab fa-python text-primary"></i>
+                                <span>Python Developer</span>
+                                <small class="badge bg-danger">Hot</small>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <button class="quick-search-btn" data-job="Full Stack Developer">
+                                <i class="fas fa-layer-group text-success"></i>
+                                <span>Full Stack Developer</span>
+                                <small class="badge bg-success">Popular</small>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <button class="quick-search-btn" data-job="Data Scientist">
+                                <i class="fas fa-chart-bar text-info"></i>
+                                <span>Data Scientist</span>
+                                <small class="badge bg-info">Trending</small>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <button class="quick-search-btn" data-job="Frontend Developer">
+                                <i class="fas fa-palette text-warning"></i>
+                                <span>Frontend Developer</span>
+                                <small class="badge bg-warning">New</small>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <button class="quick-search-btn" data-job="Backend Developer">
+                                <i class="fas fa-server text-dark"></i>
+                                <span>Backend Developer</span>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <button class="quick-search-btn" data-job="DevOps Engineer">
+                                <i class="fas fa-cogs text-primary"></i>
+                                <span>DevOps Engineer</span>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <button class="quick-search-btn" data-job="Machine Learning Engineer">
+                                <i class="fas fa-brain text-danger"></i>
+                                <span>ML Engineer</span>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <button class="quick-search-btn" data-job="Cloud Architect">
+                                <i class="fas fa-cloud text-info"></i>
+                                <span>Cloud Architect</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Searches -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-history"></i> Your Recent Searches
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="recent-search-list">
+                        <div class="recent-search-item">
+                            <i class="fas fa-search text-primary"></i>
+                            <span>Python Developer</span>
+                            <small class="text-muted">2 hours ago</small>
+                        </div>
+                        <div class="recent-search-item">
+                            <i class="fas fa-search text-primary"></i>
+                            <span>Data Analyst</span>
+                            <small class="text-muted">Yesterday</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips & Insights -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-lightbulb"></i> Pro Tips
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="tip-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>Add your skills first for accurate match percentage</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>Use specific job titles for better results</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>Analyze multiple roles to find your best fit</span>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>Check trending skills in your target role</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Analyze Container */
+.analyze-container {
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero Section */
+.analyze-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 60px 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+}
+
+.hero-illustration {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.stats-badges .badge {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+}
+
+/* Analysis Card */
+.analysis-card {
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.analysis-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2) !important;
+}
+
+.analysis-icon {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Form Elements */
+.form-control-lg, .form-select-lg {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control-lg:focus, .form-select-lg:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    transform: scale(1.02);
+}
+
+/* Analyze Button */
+.analyze-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 18px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.analyze-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
+}
+
+.analyze-btn:active {
+    transform: translateY(0);
+}
+
+/* Quick Search Buttons */
+.quick-search-btn {
+    width: 100%;
+    padding: 20px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+.quick-search-btn:hover {
+    border-color: #667eea;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+}
+
+.quick-search-btn i {
+    font-size: 2rem;
+}
+
+.quick-search-btn span {
+    font-weight: 600;
+    color: #333;
+}
+
+.quick-search-btn .badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* Loading Animation */
+.loading-animation {
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Recent Search Items */
+.recent-search-item, .tip-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.recent-search-item:hover, .tip-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.recent-search-item i, .tip-item i {
+    font-size: 1.2rem;
+}
+
+/* Progress Bar Animation */
+@keyframes progressAnimation {
+    0% { width: 0%; }
+    25% { width: 25%; }
+    50% { width: 50%; }
+    75% { width: 75%; }
+    100% { width: 100%; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .analyze-hero {
+        padding: 40px 20px;
+        text-align: center;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .hero-illustration {
+        display: none;
+    }
+    
+    .quick-search-btn {
+        padding: 15px 10px;
+    }
+    
+    .quick-search-btn i {
+        font-size: 1.5rem;
+    }
+}
+
+/* Card Headers */
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+
+/* Alert Styling */
+.alert-info {
+    border-left: 5px solid #0dcaf0;
+    background: #e7f6fd;
+    border-radius: 10px;
+}
+</style>
+
+<script>
+$(document).ready(function() {
+    // Quick search buttons
+    $('.quick-search-btn').click(function() {
+        const jobTitle = $(this).data('job');
+        $('#job_title').val(jobTitle);
+        
+        // Smooth scroll to form
+        $('html, body').animate({
+            scrollTop: $('#job_title').offset().top - 100
+        }, 500);
+        
+        // Focus on input
+        $('#job_title').focus();
+    });
+    
+    // Form submission with loading animation
+    $('#analyzeForm').submit(function(e) {
+        // Show loading state
+        $('#analyzeBtn').prop('disabled', true)
+                        .html('<i class="fas fa-spinner fa-spin"></i> Analyzing...');
+        
+        $('#loadingState').slideDown();
+        
+        // Animate progress bar
+        let progress = 0;
+        const progressInterval = setInterval(function() {
+            progress += 5;
+            $('#progressBar').css('width', progress + '%');
+            
+            // Update progress text
+            if (progress < 30) {
+                $('#progressText').text('Connecting to job sites...');
+            } else if (progress < 60) {
+                $('#progressText').text('Extracting job requirements...');
+            } else if (progress < 90) {
+                $('#progressText').text('Analyzing skills match...');
+            } else {
+                $('#progressText').text('Generating report...');
+            }
+            
+            if (progress >= 100) {
+                clearInterval(progressInterval);
+                $('#progressText').text('Almost done...');
+            }
+        }, 150);
+    });
+    
+    // Auto-suggest (future feature)
+    let jobSuggestions = [
+        'Python Developer', 'Java Developer', 'JavaScript Developer',
+        'Full Stack Developer', 'Frontend Developer', 'Backend Developer',
+        'Data Scientist', 'Data Analyst', 'Machine Learning Engineer',
+        'DevOps Engineer', 'Cloud Architect', 'Software Engineer',
+        'Mobile Developer', 'iOS Developer', 'Android Developer',
+        'UI/UX Designer', 'Product Manager', 'QA Engineer'
+    ];
+    
+    $('#job_title').on('input', function() {
+        const value = $(this).val().toLowerCase();
+        // Future: Implement autocomplete dropdown
+    });
+    
+    // Form validation
+    $('#job_title').on('blur', function() {
+        const value = $(this).val().trim();
+        if (value.length < 3) {
+            $(this).addClass('is-invalid');
+        } else {
+            $(this).removeClass('is-invalid').addClass('is-valid');
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,734 @@
+{% extends "base.html" %}
+
+{% block title %}Analyze Job - Tech Skills Checker{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Hero Section */
+.analyze-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 4rem 2rem;
+    border-radius: 20px;
+    color: white;
+    margin-bottom: 2rem;
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.analyze-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.analyze-hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.analyze-hero p {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+}
+
+.stats-badges {
+    margin-top: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.stats-badges .badge {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.stats-badges .badge:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+}
+
+/* Main Analysis Card */
+.analysis-main-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+}
+
+.analysis-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.analysis-icon i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+/* Form Styling */
+.form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.form-control, .form-select {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    outline: none;
+}
+
+.form-text {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* Advanced Options Card */
+.options-card {
+    background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+.options-card h6 {
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 1.25rem;
+    font-size: 1.05rem;
+}
+
+.form-check {
+    padding: 0.75rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.form-check:hover {
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.1rem;
+    border: 2px solid #d1d5db;
+}
+
+.form-check-input:checked {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+.form-check-label {
+    margin-left: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.form-check-label i {
+    margin-right: 0.5rem;
+}
+
+/* Info Alert */
+.info-alert {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border-left: 4px solid #3b82f6;
+    border-radius: 12px;
+    padding: 1.25rem;
+}
+
+.info-alert h6 {
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 0.75rem;
+}
+
+.info-alert ul {
+    margin-bottom: 0;
+    color: #1e40af;
+}
+
+.info-alert ul li {
+    margin-bottom: 0.5rem;
+}
+
+/* Analyze Button */
+.btn-analyze {
+    width: 100%;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.btn-analyze:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+}
+
+.btn-analyze:active {
+    transform: translateY(0);
+}
+
+/* Loading State */
+.loading-state {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+.loading-animation {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+}
+
+.loading-spinner {
+    width: 80px;
+    height: 80px;
+    border: 8px solid #e5e7eb;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.progress-custom {
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+}
+
+.progress-bar-custom {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.3s ease;
+    animation: progressAnim 2s ease-in-out infinite;
+}
+
+@keyframes progressAnim {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+/* Trending Jobs Grid */
+.trending-card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 100%;
+}
+
+.trending-card:hover {
+    border-color: #667eea;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+}
+
+.trending-card .icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.trending-card .icon i {
+    font-size: 1.8rem;
+    color: white;
+}
+
+.trending-card h6 {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.trending-card .badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+}
+
+/* Tips & History Cards */
+.info-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    height: 100%;
+}
+
+.info-card .card-header-custom {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+}
+
+.tip-item, .history-item {
+    padding: 0.75rem;
+    border-radius: 10px;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+    background: #f9fafb;
+}
+
+.tip-item:hover, .history-item:hover {
+    background: rgba(102, 126, 234, 0.05);
+    transform: translateX(5px);
+}
+
+.tip-item i {
+    color: #10b981;
+    margin-right: 0.75rem;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-item i {
+    color: #667eea;
+    margin-right: 0.75rem;
+}
+
+.history-item small {
+    color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .analyze-hero {
+        padding: 3rem 1.5rem;
+    }
+
+    .analyze-hero h1 {
+        font-size: 2rem;
+    }
+
+    .analysis-main-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .trending-card {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="analyze-hero">
+    <div class="row align-items-center">
+        <div class="col-lg-7">
+            <h1>
+                <i class="fas fa-search-plus"></i> Analyze Your Dream Job
+            </h1>
+            <p class="mb-3">
+                Enter any job title and discover exactly what skills you need to land that role! Get insights from 1000+ real job postings.
+            </p>
+            <div class="stats-badges">
+                <span class="badge me-2 mb-2">
+                    <i class="fas fa-briefcase"></i> 1000+ Jobs Analyzed
+                </span>
+                <span class="badge me-2 mb-2">
+                    <i class="fas fa-globe"></i> Indeed & Naukri.com
+                </span>
+                <span class="badge mb-2">
+                    <i class="fas fa-bolt"></i> Real-time Data
+                </span>
+            </div>
+        </div>
+        <div class="col-lg-5 text-center d-none d-lg-block">
+            <i class="fas fa-chart-line" style="font-size: 10rem; opacity: 0.2;"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Main Analysis Form -->
+<div class="row">
+    <div class="col-lg-8">
+        <div class="analysis-main-card">
+            <div class="text-center mb-4">
+                <div class="analysis-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h2 class="fw-bold mb-2">Start Your Analysis</h2>
+                <p class="text-muted">Enter the job title you're interested in</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('main.analyze') }}" id="analyzeForm">
+                <!-- Job Title -->
+                <div class="mb-4">
+                    <label for="job_title" class="form-label">
+                        <i class="fas fa-keyboard"></i> Job Title
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="job_title" 
+                           name="job_title" 
+                           placeholder="e.g., Python Developer, Data Scientist, Full Stack Engineer"
+                           required 
+                           autofocus>
+                    <div class="form-text">
+                        <i class="fas fa-lightbulb text-warning"></i> 
+                        <strong>Tip:</strong> Be specific for better results (e.g., "Senior React Developer")
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="mb-4">
+                    <label for="job_location" class="form-label">
+                        <i class="fas fa-map-marker-alt"></i> Location (Optional)
+                    </label>
+                    <select class="form-select" id="job_location" name="job_location">
+                        <option value="India" selected>India (All Cities)</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Delhi">Delhi NCR</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Remote">Remote</option>
+                    </select>
+                </div>
+
+                <!-- Analysis Options -->
+                <div class="options-card mb-4">
+                    <h6>
+                        <i class="fas fa-sliders-h"></i> Analysis Options
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="deepAnalysis" checked>
+                                <label class="form-check-label" for="deepAnalysis">
+                                    <i class="fas fa-microscope text-primary"></i> Deep Analysis
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="salaryInfo" checked>
+                                <label class="form-check-label" for="salaryInfo">
+                                    <i class="fas fa-dollar-sign text-success"></i> Salary Insights
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="trendAnalysis" checked>
+                                <label class="form-check-label" for="trendAnalysis">
+                                    <i class="fas fa-chart-line text-info"></i> Trend Analysis
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="recommendations" checked>
+                                <label class="form-check-label" for="recommendations">
+                                    <i class="fas fa-star text-warning"></i> Get Recommendations
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Alert -->
+                <div class="info-alert mb-4">
+                    <h6>
+                        <i class="fas fa-info-circle"></i> How It Works
+                    </h6>
+                    <ul class="mb-0">
+                        <li>We scrape <strong>Indeed</strong> and <strong>Naukri.com</strong> for real job postings</li>
+                        <li>Extract and analyze required skills from descriptions</li>
+                        <li>Compare with your current skill portfolio</li>
+                        <li>Generate detailed report with charts and recommendations</li>
+                    </ul>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-analyze" id="analyzeBtn">
+                    <i class="fas fa-search"></i> Analyze Job Requirements
+                </button>
+            </form>
+
+            <!-- Loading State (Hidden by default) -->
+            <div id="loadingState" style="display: none;">
+                <div class="loading-state mt-4">
+                    <div class="loading-animation">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <h5 class="text-primary mb-2">
+                        <i class="fas fa-robot"></i> AI is analyzing job market...
+                    </h5>
+                    <p class="text-muted mb-3">This may take 10-15 seconds</p>
+                    <div class="progress-custom">
+                        <div class="progress-bar-custom" id="progressBar"></div>
+                    </div>
+                    <small class="text-muted" id="progressText">Initializing...</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Recent Searches -->
+        <div class="info-card mb-4">
+            <div class="card-header-custom">
+                <i class="fas fa-history"></i> Recent Searches
+            </div>
+            <div class="history-item">
+                <div>
+                    <i class="fas fa-search"></i>
+                    <strong>Python Developer</strong>
+                </div>
+                <small>2 hours ago</small>
+            </div>
+            <div class="history-item">
+                <div>
+                    <i class="fas fa-search"></i>
+                    <strong>Data Scientist</strong>
+                </div>
+                <small>Yesterday</small>
+            </div>
+            <div class="history-item">
+                <div>
+                    <i class="fas fa-search"></i>
+                    <strong>Full Stack Dev</strong>
+                </div>
+                <small>2 days ago</small>
+            </div>
+        </div>
+
+        <!-- Pro Tips -->
+        <div class="info-card">
+            <div class="card-header-custom">
+                <i class="fas fa-lightbulb"></i> Pro Tips
+            </div>
+            <div class="tip-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Add your skills first for accurate match percentage</span>
+            </div>
+            <div class="tip-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Use specific job titles for better results</span>
+            </div>
+            <div class="tip-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Analyze multiple roles to find your best fit</span>
+            </div>
+            <div class="tip-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Check trending skills in your target role</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trending Job Searches -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-4">
+                <h5 class="mb-4">
+                    <i class="fas fa-fire text-danger"></i> Trending Job Searches
+                </h5>
+                <div class="row g-3">
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="trending-card" data-job="Python Developer">
+                            <div class="icon">
+                                <i class="fab fa-python"></i>
+                            </div>
+                            <h6>Python Developer</h6>
+                            <span class="badge bg-danger">Hot</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="trending-card" data-job="Full Stack Developer">
+                            <div class="icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                            <h6>Full Stack Developer</h6>
+                            <span class="badge bg-success">Popular</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="trending-card" data-job="Data Scientist">
+                            <div class="icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h6>Data Scientist</h6>
+                            <span class="badge bg-info">Trending</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="trending-card" data-job="Frontend Developer">
+                            <div class="icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <h6>Frontend Developer</h6>
+                            <span class="badge bg-warning text-dark">New</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="trending-card" data-job="Backend Developer">
+                            <div class="icon" style="background: linear-gradient(135deg, #6b7280, #4b5563);">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <h6>Backend Developer</h6>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="trending-card" data-job="DevOps Engineer">
+                            <div class="icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <h6>DevOps Engineer</h6>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="trending-card" data-job="Machine Learning Engineer">
+                            <div class="icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h6>ML Engineer</h6>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="trending-card" data-job="Cloud Architect">
+                            <div class="icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <h6>Cloud Architect</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Trending card click
+    $('.trending-card').click(function() {
+        const jobTitle = $(this).data('job');
+        $('#job_title').val(jobTitle);
+        
+        // Smooth scroll to form
+        $('html, body').animate({
+            scrollTop: $('#job_title').offset().top - 100
+        }, 500);
+        
+        // Visual feedback
+        $(this).css('transform', 'scale(1.05)');
+        setTimeout(() => {
+            $(this).css('transform', '');
+        }, 200);
+    });
+    
+    // Form submission with loading
+    $('#analyzeForm').submit(function() {
+        $('#analyzeBtn').hide();
+        $('#loadingState').slideDown();
+        
+        // Progress simulation
+        let progress = 0;
+        const messages = [
+            'Connecting to job sites...',
+            'Searching job postings...',
+            'Extracting requirements...',
+            'Analyzing skills...',
+            'Comparing with your profile...',
+            'Generating charts...',
+            'Finalizing report...'
+        ];
+        
+        const interval = setInterval(() => {
+            progress += 14;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+            }
+            
+            $('#progressBar').css('width', progress + '%');
+            const messageIndex = Math.floor((progress / 100) * (messages.length - 1));
+            $('#progressText').text(messages[messageIndex]);
+        }, 2000);
+    });
+});
+</script>
+{% endblock %}
