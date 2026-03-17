@@ -1,45 +1,45 @@
 🚀 Tech Skills Checker
 📌 Project Overview
 
-Tech Skills Checker is a simple web application that helps users understand their technical skills.
-It checks what skills you have and suggests what you should learn next to improve.
+    Tech Skills Checker is a simple web application that helps users understand their technical skills.
+    It checks what skills you have and suggests what you should learn next to improve.
 
 👉 The main goal of this project is to help users become job-ready by learning the right skills.
 
 🎯 Features
 
 🔐 User Authentication (Login / Register)
-Users can create an account and log in safely.
+   Users can create an account and log in safely.
 
 📊 Skills Analysis Dashboard
-Shows your skills in a simple dashboard so you can understand your level.
+   Shows your skills in a simple dashboard so you can understand your level.
 
 🤖 Smart Skill Recommendations
-Gives suggestions on what skills you should learn next.
+   Gives suggestions on what skills you should learn next.
 
 🌐 Job/Skill Data Scraping
-Collects latest skill trends from the internet.
+    Collects latest skill trends from the internet.
 
 👤 User Profile Management
-Users can manage and update their profile.
+   Users can manage and update their profile.
 
 📈 Performance Tracking
-Tracks your progress and improvement over time.
+   Tracks your progress and improvement over time.
 
 🛠️ Tech Stack
 
-Frontend: HTML, CSS, JavaScript
+  Frontend: HTML, CSS, JavaScript
 
-Backend: Python (Flask)
+  Backend: Python (Flask)
 
-Database: SQLite
+  Database: SQLite
 
-Authentication: Flask-Login
+  Authentication: Flask-Login
 
 Other: Web Scraping
 
 📂 Project Structure
-tech-skills-checker/
+  tech-skills-checker/
 │── app.py              # Main application
 │── config.py           # Settings file
 │── init_db.py          # Create database
@@ -49,49 +49,63 @@ tech-skills-checker/
 │── static/             # CSS & JS files
 │── templates/          # HTML files
 │── requirements.txt    # Required libraries
+
+
+
 ⚙️ Installation & Setup
+
 1️⃣ Clone the repository
-git clone https://github.com/your-username/tech-skills-checker.git
-cd tech-skills-checker
+
+   git clone https://github.com/your-username/tech-skills-checker.git
+   cd tech-skills-checker
+
 2️⃣ Install dependencies
-pip install -r requirements.txt
+
+   pip install -r requirements.txt
+
 3️⃣ Run the application
-python app.py
+
+   python app.py
+
 4️⃣ Open in browser
-http://127.0.0.1:5000
+
+    http://127.0.0.1:5000
+
 🔑 Default Login
-Username: admin  
-Password: admin123
+
+   Username: admin  
+   Password: admin123
+
 💡 How It Works
 
-User creates an account or logs in
+  User creates an account or logs in
 
-User enters their skills
+  User enters their skills
 
-The system checks and analyzes the skills
+  The system checks and analyzes the skills
 
-Dashboard shows results and suggestions
+  Dashboard shows results and suggestions
 
-System also checks latest trending skills
+  System also checks latest trending skills
 
 🚀 Future Improvements
 
-AI-based smart suggestions
+  AI-based smart suggestions
 
-Resume analyzer
+  Resume analyzer
 
-Job matching system
+  Job matching system
 
-Integration with job platforms
+  Integration with job platforms
 
 🤝 Contributing
 
-Contributions are welcome! 🎉
+  Contributions are welcome! 🎉
 
-If you want to improve this project:
+  If you want to improve this project:
 
-Fork the repository
+  Fork the repository
+  
+  Make changes
 
-Make changes
-
-Create a Pull Request
+ Create a Pull Request
